@@ -49,6 +49,14 @@ class UserGeoData(models.Model):
     longitude = models.DecimalField(max_digits=9, decimal_places=6)
     latitude = models.DecimalField(max_digits=9, decimal_places=6)
 
+class Holiday(models.Model):
+    pkid = models.BigAutoField(primary_key=True, editable=False)
+    id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
+    usergeodata = models.ForeignKey(UserGeoData, on_delete=models.CASCADE)
+    holiday_name = models.CharField(max_length=120)
+    holiday_type = models.CharField(max_length=120)
+    date = models.DateTimeField(default=timezone.now())
+    
 class Security(models.Model):
     pkid = models.BigAutoField(primary_key=True, editable=False)
     id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
@@ -59,12 +67,3 @@ class UserTimezone(models.Model):
     pkid = models.BigAutoField(primary_key=True, editable=False)
     id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     name = models.CharField(max_length=255)
-
-class Holiday(models.Model):
-    pkid = models.BigAutoField(primary_key=True, editable=False)
-    id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
-    usergeodata = models.ForeignKey(UserGeoData, on_delete=models.CASCADE)
-    holiday_name = models.CharField(max_length=120)
-    holiday_type = models.CharField(max_length=120)
-    date = models.DateTimeField(default=timezone.now())
-    
