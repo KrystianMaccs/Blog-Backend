@@ -14,7 +14,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(verbose_name=_("Username"), max_length=255, unique=True)
     first_name = models.CharField(verbose_name=_("First Name"), max_length=50)
     last_name = models.CharField(verbose_name=_("Last Name"), max_length=50)
-    email = models.EmailField(verbose_name=_("Email Address"), unique=True)    
+    email = models.EmailField(verbose_name=_("Email Address"), unique=True)
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     date_joined = models.DateTimeField(default=timezone.now)
@@ -41,7 +41,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 class UserGeoData(models.Model):
     pkid = models.BigAutoField(primary_key=True, editable=False)
     id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
-    ip_address = models.GenericIPAddressField()
+    ip_address = models.GenericIPAddressField(default="0.0.0.0")
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     city = models.CharField(max_length=50)
     region_iso_code = models.CharField(max_length=5)
@@ -49,21 +49,16 @@ class UserGeoData(models.Model):
     longitude = models.DecimalField(max_digits=9, decimal_places=6)
     latitude = models.DecimalField(max_digits=9, decimal_places=6)
 
-class Holiday(models.Model):
-    pkid = models.BigAutoField(primary_key=True, editable=False)
-    id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
-    usergeodata = models.ForeignKey(UserGeoData, on_delete=models.CASCADE)
-    holiday_name = models.CharField(max_length=120)
-    holiday_type = models.CharField(max_length=120)
-    date = models.DateTimeField(default=timezone.now())
+# class Holiday(models.Model):
+#     pkid = models.BigAutoField(primary_key=True, editable=False)
+#     id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
+#     user = models.OneToOneField(User, on_delete=models.CASCADE)
+#     holiday_name = models.CharField(max_length=120)
+#     holiday_type = models.CharField(max_length=120)
+#     date = models.DateTimeField(auto_now=True)
     
-class Security(models.Model):
-    pkid = models.BigAutoField(primary_key=True, editable=False)
-    id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
-    usergeodata = models.OneToOneField(UserGeoData, on_delete=models.CASCADE)
-    is_vpn = models.BooleanField(default=False)
-    
-class UserTimezone(models.Model):
-    pkid = models.BigAutoField(primary_key=True, editable=False)
-    id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
-    name = models.CharField(max_length=255)
+# class Security(models.Model):
+#     pkid = models.BigAutoField(primary_key=True, editable=False)
+#     id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
+#     usergeodata = models.OneToOneField(UserGeoData, on_delete=models.CASCADE)
+#     is_vpn = models.BooleanField(default=False)
