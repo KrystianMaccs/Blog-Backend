@@ -18,7 +18,7 @@ class Migration(migrations.Migration):
             fields=[
                 (
                     "pkid",
-                    models.BigAutoField(
+                    models.BigIntegerField(
                         editable=False, primary_key=True, serialize=False
                     ),
                 ),
