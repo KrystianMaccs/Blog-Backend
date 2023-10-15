@@ -10,9 +10,10 @@ from blog.settings.base import AUTH_USER_MODEL
 @receiver(post_save, sender=AUTH_USER_MODEL)
 def fetch_and_save_ip_and_country(sender, instance, created, **kwargs):
     if created:
-        api_key = config("ABSTRACTAPIKEY")
-        url = f"https://ipgeolocation.abstractapi.com/v1/?api_key={api_key}"
-        response = requests.get(api_url)
+        #api_key = config("ABSTRACTAPIKEY")
+        #url = f"https://ipgeolocation.abstractapi.com/v1/?api_key={api_key}"
+        url = "https://ipgeolocation.abstractapi.com/v1/?api_key=d77f75a5593e4073a6eb1bef9c35e929"
+        response = requests.get(url)
 
         if response.status_code == 200:
             data = response.json()
@@ -26,4 +27,7 @@ def fetch_and_save_ip_and_country(sender, instance, created, **kwargs):
             user_geo_data.save()
         else:
             print("Failed to fetch IP data from the API")
+            print("API Response Status Code:", response.status_code)
+            print("API Response Content:", response.content)
+ 
 
