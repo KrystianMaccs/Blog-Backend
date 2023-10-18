@@ -12,16 +12,6 @@ from .managers import CustomUserManager
 
 
 
-class UserGeoData(models.Model):
-    ip_address = models.GenericIPAddressField(default="0.0.0.0")
-    city = models.CharField(max_length=50)
-    region_iso_code = models.CharField(max_length=5)
-    country_code = models.CharField(max_length=5)
-    longitude = models.DecimalField(max_digits=9, decimal_places=6)
-    latitude = models.DecimalField(max_digits=9, decimal_places=6)
-    security = models.BooleanField(default=False)
-
-
 class User(AbstractBaseUser, PermissionsMixin):
     pkid = models.BigAutoField(primary_key=True, editable=False)
     id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
@@ -29,7 +19,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     first_name = models.CharField(verbose_name=_("First Name"), max_length=50)
     last_name = models.CharField(verbose_name=_("Last Name"), max_length=50)
     email = models.EmailField(verbose_name=_("Email Address"), unique=True)
-    usergeo = models.OneToOneField(UserGeoData, on_delete=models.CASCADE, null=True)
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     date_joined = models.DateTimeField(default=timezone.now)
@@ -53,10 +42,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     def get_short_name(self):
         return self.username
     
-    
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
-        if not self.usergeo:
+        if not self.id:
             api_response = fetch_user_geo_data(self.id)
             user_geo_data = extract_user_geo_data(api_response)
             try:
@@ -64,6 +52,29 @@ class User(AbstractBaseUser, PermissionsMixin):
                 user_geo.save()
             except Exception as e:
                 print(f"Error creating UserGeoData: {e}")
+    
+    
+    
+class UserGeoData(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
+    ip_address = models.GenericIPAddressField(default="0.0.0.0")
+    city = models.CharField(max_length=50)
+    region_iso_code = models.CharField(max_length=5)
+    country_code = models.CharField(max_length=5)
+    longitude = models.DecimalField(max_digits=9, decimal_places=6)
+    latitude = models.DecimalField(max_digits=9, decimal_places=6)
+    security = models.BooleanField(default=False)
+    
+    # def save(self, *args, **kwargs):
+    #     super().save(*args, **kwargs)
+    #     if not self.usergeo:
+    #         api_response = fetch_user_geo_data(self.id)
+    #         user_geo_data = extract_user_geo_data(api_response)
+    #         try:
+    #             user_geo = UserGeoData(user=self, **user_geo_data)
+    #             user_geo.save()
+    #         except Exception as e:
+    #             print(f"Error creating UserGeoData: {e}")
 
 
 
