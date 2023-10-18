@@ -10,18 +10,6 @@ from django.utils.translation import gettext_lazy as _
 from .managers import CustomUserManager
 
 
-import uuid
-import requests
-from .api import fetch_user_geo_data, extract_user_geo_data
-
-from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
-from django.db import models
-from django.utils import timezone
-from django.utils.translation import gettext_lazy as _
-
-from .managers import CustomUserManager
-
-
 
 
 class UserGeoData(models.Model):
