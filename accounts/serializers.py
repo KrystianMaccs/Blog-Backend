@@ -16,4 +16,4 @@ class UserCreateSerializer(UserCreateSerializer):
 class UserGeoDataSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserGeoData
-        fields = ('ip_address', 'city', 'region_iso_code', 'country_code', 'longitude', 'latitude')
+        fields = ('ip_address', 'city', 'region_iso_code', 'country_code', 'longitude', 'latitude', 'security')
