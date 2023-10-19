@@ -1,6 +1,6 @@
 import requests
 from celery import shared_task
-from .models import UserGeoData, Security, Holiday
+from .models import UserGeoData, Holiday
 import datetime
 
 
@@ -22,7 +22,6 @@ def fetch_and_save_geodata():
         country_code = data['country_code']
         longitude = data['longitude']
         latitude = data['latitude']
-        is_vpn = data['security']['is_vpn']
 
         user_geo_data, created = UserGeoData.objects.update_or_create(
             ip_address=ip_address,
@@ -34,10 +33,6 @@ def fetch_and_save_geodata():
                 'latitude': latitude,
             }
         )
-        security, created = Security.objects.update_or_create(
-            defaults={'is_vpn': is_vpn}
-        )
-        user_geo_data.security = security
         user_geo_data.save()
     except requests.exceptions.RequestException as e:
         print(f"Error fetching geo data: {e}")

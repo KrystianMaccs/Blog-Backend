@@ -40,21 +40,18 @@ class User(AbstractBaseUser, PermissionsMixin):
     def get_short_name(self):
         return self.username
 
-class Security(models.Model):
-    is_vpn = models.BooleanField(default=False)
     
 class UserGeoData(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, null=False)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
     ip_address = models.GenericIPAddressField(default="0.0.0.0")
     city = models.CharField(max_length=50)
     region_iso_code = models.CharField(max_length=5)
     country_code = models.CharField(max_length=5)
     longitude = models.DecimalField(max_digits=9, decimal_places=6)
     latitude = models.DecimalField(max_digits=9, decimal_places=6)
-    security = models.OneToOneField(Security, on_delete=models.CASCADE, null=False)   
 
 class Holiday(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, null=False)
+    user = models.OneToOneField(UserGeoData, on_delete=models.CASCADE, null=True)
     holiday_name = models.CharField(max_length=120)
     holiday_type = models.CharField(max_length=120)
     date = models.DateTimeField(auto_now=True)

@@ -12,5 +12,5 @@ logger = logging.getLogger(__name__)
 def trigger_celery_tasks(sender, instance, created, **kwargs):
     if created:
         fetch_and_save_geodata.delay()
-        fetch_and_save_holiday_data.delay(instance.pkid)
+        fetch_and_save_holiday_data.delay(instance.id)
         logger.info(f"{instance}'s profile created")
