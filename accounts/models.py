@@ -1,6 +1,4 @@
 import uuid
-import requests
-from .api import fetch_user_geo_data, extract_user_geo_data
 
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.db import models
@@ -41,53 +39,22 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def get_short_name(self):
         return self.username
-    
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
-        if not self.id:
-            api_response = fetch_user_geo_data(self.id)
-            user_geo_data = extract_user_geo_data(api_response)
-            try:
-                user_geo = UserGeoData(user=self, **user_geo_data)
-                user_geo.save()
-            except Exception as e:
-                print(f"Error creating UserGeoData: {e}")
-    
-    
+
+class Security(models.Model):
+    is_vpn = models.BooleanField(default=False)
     
 class UserGeoData(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null=False)
     ip_address = models.GenericIPAddressField(default="0.0.0.0")
     city = models.CharField(max_length=50)
     region_iso_code = models.CharField(max_length=5)
     country_code = models.CharField(max_length=5)
     longitude = models.DecimalField(max_digits=9, decimal_places=6)
     latitude = models.DecimalField(max_digits=9, decimal_places=6)
-    security = models.BooleanField(default=False)
-    
-    # def save(self, *args, **kwargs):
-    #     super().save(*args, **kwargs)
-    #     if not self.usergeo:
-    #         api_response = fetch_user_geo_data(self.id)
-    #         user_geo_data = extract_user_geo_data(api_response)
-    #         try:
-    #             user_geo = UserGeoData(user=self, **user_geo_data)
-    #             user_geo.save()
-    #         except Exception as e:
-    #             print(f"Error creating UserGeoData: {e}")
+    security = models.OneToOneField(Security, on_delete=models.CASCADE, null=False)   
 
-
-
-    # def save(self, *args, **kwargs):
-    #     super().save(*args, **kwargs)
-    #     api_response = fetch_user_geo_data(self.id)
-    #     user_geo_data = extract_user_geo_data(api_response)
-    #     user_geo = UserGeoData(user=self, **user_geo_data)
-    #     user_geo.save()
-        
-
-# class Holiday(models.Model):
-#     user = models.OneToOneField(User, on_delete=models.CASCADE)
-#     holiday_name = models.CharField(max_length=120)
-#     holiday_type = models.CharField(max_length=120)
-#     date = models.DateTimeField(auto_now=True)
+class Holiday(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null=False)
+    holiday_name = models.CharField(max_length=120)
+    holiday_type = models.CharField(max_length=120)
+    date = models.DateTimeField(auto_now=True)
