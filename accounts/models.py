@@ -42,7 +42,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     
 class UserGeoData(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
     ip_address = models.GenericIPAddressField(default="0.0.0.0")
     city = models.CharField(max_length=50)
     region_iso_code = models.CharField(max_length=5)
@@ -51,7 +51,7 @@ class UserGeoData(models.Model):
     latitude = models.DecimalField(max_digits=9, decimal_places=6)
 
 class Holiday(models.Model):
-    user = models.OneToOneField(UserGeoData, on_delete=models.CASCADE, null=True)
+    user = models.OneToOneField(UserGeoData, on_delete=models.CASCADE, null=True, blank=True)
     holiday_name = models.CharField(max_length=120)
     holiday_type = models.CharField(max_length=120)
     date = models.DateTimeField(auto_now=True)
