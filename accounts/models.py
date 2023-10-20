@@ -11,8 +11,7 @@ from .managers import CustomUserManager
 
 
 class User(AbstractBaseUser, PermissionsMixin):
-    pkid = models.BigAutoField(primary_key=True, editable=False)
-    id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, unique=True)
     username = models.CharField(verbose_name=_("Username"), max_length=255, unique=True)
     first_name = models.CharField(verbose_name=_("First Name"), max_length=50)
     last_name = models.CharField(verbose_name=_("Last Name"), max_length=50)
@@ -42,6 +41,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     
 class UserGeoData(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, unique=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
     ip_address = models.GenericIPAddressField(default="0.0.0.0")
     city = models.CharField(max_length=50)
@@ -51,7 +51,8 @@ class UserGeoData(models.Model):
     latitude = models.DecimalField(max_digits=9, decimal_places=6)
 
 class Holiday(models.Model):
-    user = models.OneToOneField(UserGeoData, on_delete=models.CASCADE, null=True, blank=True)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, unique=True)
+    usergeodata = models.OneToOneField(UserGeoData, on_delete=models.CASCADE, null=True, blank=True)
     holiday_name = models.CharField(max_length=120)
     holiday_type = models.CharField(max_length=120)
     date = models.DateTimeField(auto_now=True)

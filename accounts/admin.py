@@ -12,7 +12,6 @@ class UserAdmin(BaseUserAdmin):
     form = CustomUserChangeForm
     model = User
     list_display = [
-        "pkid",
         "id",
         "email",
         "username",

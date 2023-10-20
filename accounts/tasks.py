@@ -40,9 +40,9 @@ def fetch_and_save_geodata():
 
 
 @shared_task
-def fetch_and_save_holiday_data(pkid):
+def fetch_and_save_holiday_data(id):
     try:
-        user_geo_data = UserGeoData.objects.get(pkid=pkid)
+        user_geo_data = UserGeoData.objects.get(id=id)
         country_code = user_geo_data.country_code
 
         current_date = datetime.date.today()
